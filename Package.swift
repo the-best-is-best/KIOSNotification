@@ -5,6 +5,8 @@ let package = Package(
     name: "KIOSNotification",
     platforms: [
         .iOS(.v12),
+        .macOS(.v10_14) // Ensure this is correct if you're targeting macOS
+
     ],
     products: [
         .library(
