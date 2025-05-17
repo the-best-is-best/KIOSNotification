@@ -11,11 +11,7 @@ import Foundation
 import UserNotifications
 
 @objc public class KIOSNotification: NSObject {
-    @MainActor // Ensures that the entire class runs on the main actor
-    private static var notificationListener: (([AnyHashable: Any]) -> Void)?
-    @MainActor // Ensures that the entire class runs on the main actor
-    private static var lastNotificationData: [AnyHashable: Any]?
-
+  
     @objc public static func initNotification(delegate: UNUserNotificationCenterDelegate) {
         UNUserNotificationCenter.current().delegate = delegate
         requestAuthorization()
@@ -60,18 +56,6 @@ import UserNotifications
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationId])
     }
 
-    @MainActor @objc public static func setNotificationListener(callback: @escaping ([AnyHashable: Any]) -> Void) {
-        notificationListener = callback
-        if let data = lastNotificationData {
-            callback(data)
-        }
-        lastNotificationData = nil
-    }
-
-    @MainActor @objc public static func notifyNotification(data: [AnyHashable: Any]) {
-        lastNotificationData = data
-        notificationListener?(data)
-    }
 
     @objc public static func requestAuthorization() {
         let center = UNUserNotificationCenter.current()
